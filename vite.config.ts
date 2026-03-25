@@ -4,6 +4,14 @@ import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import electron from 'vite-plugin-electron/simple'
 import pkg from './package.json'
+/**
+ * 主进程/Preload 不得把业务依赖全部 external：
+ * 安装包只含 dist / dist-electron / package.json，无完整 node_modules；
+ * 链式 ESM 子路径（如 conf → ajv/dist/2020.js）在 asar 里常会缺文件导致 ERR_MODULE_NOT_FOUND。
+ * 仅外置 Electron 运行时与带 .node 的原生模块。
+ */
+const electronMainExternal = ['electron', 'better-sqlite3']
+const preloadExternal = ['electron']
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -41,7 +49,7 @@ export default defineConfig(({ command, mode }) => {
               minify: isBuild,
               outDir: 'dist-electron/main',
               rollupOptions: {
-                external: Object.keys('dependencies' in pkg ? pkg.dependencies : {}),
+                external: electronMainExternal,
               },
             },
           },
@@ -54,7 +62,7 @@ export default defineConfig(({ command, mode }) => {
               minify: isBuild,
               outDir: 'dist-electron/preload',
               rollupOptions: {
-                external: Object.keys('dependencies' in pkg ? pkg.dependencies : {}),
+                external: preloadExternal,
               },
             },
           },
@@ -73,6 +81,17 @@ export default defineConfig(({ command, mode }) => {
       })(),
     clearScreen: false,
     build: {
+      /** 压缩体积：生产包去除 console / debugger；测试包仅去除 debugger，保留日志便于验收 */
+      esbuild: isBuild
+        ? {
+            legalComments: 'none',
+            ...(mode === 'production'
+              ? { drop: ['console', 'debugger'] as const }
+              : mode === 'test'
+                ? { drop: ['debugger'] as const }
+                : {}),
+          }
+        : undefined,
       /** Element Plus 全量引入会导致单 chunk 偏大；调研阶段先放宽告警阈值，后续可改按需引入进一步瘦身 */
       chunkSizeWarningLimit: 1200,
       rollupOptions: {

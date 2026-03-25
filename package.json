@@ -24,7 +24,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build && electron-builder",
+    "build": "node scripts/release-prompt.mjs",
+    "build:direct": "vue-tsc --noEmit && vite build && node scripts/clean-release.mjs && electron-builder",
     "build:vite": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.ts --max-warnings 0",

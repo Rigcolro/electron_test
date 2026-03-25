@@ -7,6 +7,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# 由 scripts/release-prompt.mjs 生成的 electron-builder 临时合并配置
+scripts/.electron-builder-release.json
+
 node_modules
 dist
 dist-ssr

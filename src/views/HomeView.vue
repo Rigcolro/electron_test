@@ -42,8 +42,7 @@ const cards = [
     <div class="rounded-2xl border border-white/60 bg-white/70 p-7 shadow-sm backdrop-blur">
       <div class="text-2xl font-semibold text-slate-900">仿企业微信基础聊天：桌面端前置调研</div>
       <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
-        本应用用于验证 Electron 在「多窗口、持久化、系统能力、工程化」等维度的可行性与风险点。左侧菜单按模块拆分 Demo，代码注释面向不熟悉
-        Electron 的前端同学。
+        本应用用于验证 Electron 在「多窗口、持久化、系统能力、工程化」等维度的可行性与风险点。左侧菜单按模块拆分 Demo。
       </p>
     </div>
 

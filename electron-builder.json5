@@ -2,6 +2,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
   "appId": "com.demo.electron-wechat-research",
+  // Windows+pnpm：跳过打包内二次 rebuild（避免 exec pnpm.cjs 非 Win32 程序；ABI 已由 postinstall install-app-deps 处理）
+  "npmRebuild": false,
   "asar": true,
   "asarUnpack": [
     "**/node_modules/better-sqlite3/**/*",

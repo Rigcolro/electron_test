@@ -19,7 +19,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint'],
-  ignorePatterns: ['dist', 'dist-electron', 'release', 'node_modules'],
+  ignorePatterns: ['dist', 'dist-electron', 'release', 'node_modules', 'scripts'],
   rules: {
     'vue/multi-word-component-names': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
