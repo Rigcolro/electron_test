@@ -74,7 +74,7 @@ const { contextBridge, ipcRenderer } = require('electron')
 contextBridge.exposeInMainWorld('electronAPI', {
   // 1. 渲染进程 → 主进程：单向发送消息
   sendToMain: (channel, data) => ipcRenderer.send(channel, data),
-  
+
   // 2. 主进程 → 渲染进程：监听主进程消息
   onMainMessage: (channel, callback) => {
     // 过滤合法频道，避免恶意调用
@@ -83,10 +83,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
       ipcRenderer.on(channel, callback)
     }
   },
-  
+
   // 3. 双向通信：渲染进程发起请求，主进程处理后返回结果
   invokeMain: (channel, data) => ipcRenderer.invoke(channel, data),
-  
+
   // 4. 跨窗口通信：向主进程发送跨窗口消息
   sendToOtherWindow: (data) => ipcRenderer.send('cross-window-msg', data)
 })
@@ -155,7 +155,7 @@ let mainWindow // 保存主窗口实例
 function createWindow() {
   mainWindow = new BrowserWindow({/* 窗口配置 */})
   mainWindow.loadFile('index.html')
-  
+
   // 模拟主进程主动推送消息（如定时更新进度）
   setInterval(() => {
     mainWindow.webContents.send('download-progress', {
@@ -278,7 +278,7 @@ function createWinB() {
 app.whenReady().then(() => {
   createWinA()
   createWinB()
-  
+
   // 监听窗口 A 发送的跨窗口消息，转发给窗口 B
   ipcMain.on('cross-window-msg', (event, data) => {
     if (winB) {
@@ -434,4 +434,3 @@ Electron 进程间通信的核心是基于 `ipcMain` 和 `ipcRenderer` 的事件
 - 跨窗口通信：优先使用主进程中转，稳定且安全；简单场景可通过窗口 ID 直接通信。
 
 遵循安全规范和最佳实践，可避免大部分 IPC 相关的问题，提升应用的稳定性和安全性。
-> （注：文档部分内容可能由 AI 生成）
